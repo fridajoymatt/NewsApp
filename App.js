@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,65 +9,35 @@ import {
 } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { StatusBar } from "expo-status-bar";
+import axios from 'axios';
 
 const App = () => {
-  const actualite = [
-    {
-      id: "1",
-      source: "BFMTV",
-      date: "07/11/2023",
-      description: "Sport - Comme Neymar, ces footballeurs brésiliens ont apporté leur soutien à Jair Bolsonaro",
-      image:
-        "https://media.ouest-france.fr/v1/pictures/MjAyMjA5ZTMxYzYyMDQzZDRmZGM0MmMyZmYyNWNkMDMzMjdlMTk?width=1260&height=708&focuspoint=60%2C47&cropresize=1&client_id=bpeditorial&sign=08239b295f82b450171772850ff21131211568e857a2a7c86ed91547c72e3d9f",
-    },
+  const [actualite, setActualite] = useState([]);
 
-    {
-      id: "2",
-      source: "FRANCE 2",
-      date: "08/11/2023",
-      description: "Ivanka Trump témoigne à New York,dle procès our fraude de Donald Trump en images!",
-      image:
-      "https://th.bing.com/th?id=ORMS.d4496e6c372a1e95df328120bf50e33c&pid=Wdp&w=612&h=304&qlt=90&c=1&rs=1&dpr=2&p=0",
-    },
+  const apiUrl ='https://rapidapi.com/rphrp1985/api/newsnow/';
 
-    {
-      id: "3",
-      source: "AFRICMAG",
-      date: "09/11/2023",
-      description: "Effondrement du faux plafond à l'Aéroport inter ational de Monastir ; Une mission d'audit",
-      image:
-      "https://th.bing.com/th?id=ORMS.5828fba9fd1f6e1b5f052d75613b5de1&pid=Wdp&w=612&h=304&qlt=90&c=1&rs=1&dpr=2&p=0",
-    },
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(apiUrl);
+      // Assurez-vous que la structure de vos données correspond à ce que vous attendez
+      setActualite(response.data); 
+    } catch (error) {
+      console.error('Erreur de requête API :', error);
+    }
+  };
 
-    {
-      id: "4",
-      source: "INEWS",
-      date: "10/11/2023",
-      description: "Les bienfaits de la douche froide : 16 bonnesxaisons de vous y mettre !",
-      image:
-        "https://th.bing.com/th?id=ORMS.2d10af28e4baef3904ebcc6233af420c&pid=Wdp&w=612&h=304&qlt=90&c=1&rs=1&dpr=2&p=0",
-    },
-
-    {
-      id: "5",
-      source: "FRANCE24",
-      date: "11/11/2023",
-      description: "David Beckham révèle cette obsession à laquelle il pense dès le matin",
-      image:
-      "https://th.bing.com/th?id=ORMS.845b637ccae0aecd98e242bb18509b10&pid=Wdp&w=612&h=304&qlt=90&c=1&rs=1&dpr=2&p=0",
-    },
-  ];
+  useEffect(() => {
+    fetchData(); // Appeler la fonction fetchData une fois que le composant est monté
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" backgroundColor="grey" />
 
-      {/* Titre de l'application */}
       <View style={styles.titleContainer}>
         <Text style={styles.title}>ACTUALITE</Text>
       </View>
 
-      {/* FlashList contenant la liste des actualités */}
       <View style={{ flex: 1 }}>
         <Text style={{ textAlign: "center", marginBottom: 10 }}>
           Liste d'actualités
@@ -77,22 +47,22 @@ const App = () => {
           estimatedItemSize={250}
           renderItem={({ item }) => {
             return (
-              <ScrollView>
-              <View style={styles.newsContainer}>
-                <ImageBackground
-                  source={{ uri: item.image }}
-                  style={styles.imageContainer}
-                  imageStyle={styles.image}
-                >
-                  <View style={styles.imageTextContainer}>
-                    <View style={styles.titleView}>
-                      <Text style={styles.titleText}>{item.source}</Text>
+              <ScrollView key={item.id}>
+                <View style={styles.newsContainer}>
+                  <ImageBackground
+                    source={{ uri: "https://th.bing.com/th?id=ORMS.d4496e6c372a1e95df328120bf50e33c&pid=Wdp&w=612&h=304&qlt=90&c=1&rs=1&dpr=2&p=0" }}
+                    style={styles.imageContainer}
+                    imageStyle={styles.image}
+                  >
+                    <View style={styles.imageTextContainer}>
+                      <View style={styles.titleView}>
+                        <Text style={styles.titleText}>{item.title}</Text>
+                      </View>
+                      <Text style={styles.imageText}>{item.title}</Text>
+                      <Text style={styles.imageText}>{item.title}</Text>
                     </View>
-                    <Text style={styles.imageText}>{item.date}</Text>
-                    <Text style={styles.imageText}>{item.description}</Text>
+                  </ImageBackground>
                   </View>
-                </ImageBackground>
-              </View>
               </ScrollView>
             );
           }}
