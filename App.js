@@ -14,22 +14,44 @@ import axios from 'axios';
 const App = () => {
   const [actualite, setActualite] = useState([]);
 
-  const apiUrl ='https://rapidapi.com/rphrp1985/api/newsnow/';
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(apiUrl);
-      // Assurez-vous que la structure de vos données correspond à ce que vous attendez
-      setActualite(response.data); 
-    } catch (error) {
-      console.error('Erreur de requête API :', error);
-    }
-  };
-
   useEffect(() => {
-    fetchData(); // Appeler la fonction fetchData une fois que le composant est monté
+    fetchData();
   }, []);
 
+  const fetchData = async () => {
+    const options = {
+      method: 'POST',
+      url: 'https://newsnow.p.rapidapi.com/newsv2',
+      headers: {
+        'content-type': 'application/json',
+        'X-RapidAPI-Key': '975d89bfc5msha6afce769395d0cp16aad1jsn2c4d822f8378',
+        'X-RapidAPI-Host': 'newsnow.p.rapidapi.com'
+      },
+      data: {
+        query: 'AI',
+        page: 1,
+        time_bounded: true,
+        from_date: '01/02/2021',
+        to_date: '05/06/2021',
+        location: '',
+        category: '',
+        source: ''
+      }
+    };
+
+    try {
+      const response = await axios.request(options);
+      setNewsData(response.data);
+      console.log(response.data);
+
+    } catch (error) {
+      if (error.response.status === 429) {
+        console.log('Trop de requêtes. Atttendre que l\'api soit à nouveau accessible en free');
+      } else {
+        console.error(error);
+      }    
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" backgroundColor="grey" />
@@ -45,27 +67,36 @@ const App = () => {
         <FlashList
           data={actualite}
           estimatedItemSize={250}
-          renderItem={({ item }) => {
-            return (
-              <ScrollView key={item.id}>
-                <View style={styles.newsContainer}>
-                  <ImageBackground
-                    source={{ uri: "https://th.bing.com/th?id=ORMS.d4496e6c372a1e95df328120bf50e33c&pid=Wdp&w=612&h=304&qlt=90&c=1&rs=1&dpr=2&p=0" }}
-                    style={styles.imageContainer}
-                    imageStyle={styles.image}
-                  >
-                    <View style={styles.imageTextContainer}>
-                      <View style={styles.titleView}>
-                        <Text style={styles.titleText}>{item.title}</Text>
-                      </View>
-                      <Text style={styles.imageText}>{item.title}</Text>
-                      <Text style={styles.imageText}>{item.title}</Text>
-                    </View>
-                  </ImageBackground>
-                  </View>
-              </ScrollView>
-            );
-          }}
+          renderItem={({ item }) => (
+            <View>
+              <Text>Title: {item.title}</Text>
+              <Text>URL: {item.url}</Text>
+              <Text>Published At: {item.PublishedAt}</Text>
+              <Text>Source: {item.source}</Text>
+            </View>
+          )}
+
+          // renderItem={({ item }) => {
+          //   return (
+          //     <ScrollView>
+          //       <View style={styles.newsContainer}>
+          //         <ImageBackground
+          //           source={{ uri: item.image }}
+          //           style={styles.imageContainer}
+          //           imageStyle={styles.image}
+          //         >
+          //           <View style={styles.imageTextContainer}>
+          //             <View style={styles.titleView}>
+          //               <Text style={styles.titleText}>{item.title}</Text>
+          //             </View>
+          //             <Text style={styles.imageText}>{item.date}</Text>
+          //             <Text style={styles.imageText}>{item.description}</Text>
+          //           </View>
+          //         </ImageBackground>
+          //       </View>
+          //     </ScrollView>
+          //   );
+          // }}
         />
       </View>
     </SafeAreaView>
@@ -91,7 +122,6 @@ const styles = StyleSheet.create({
   },
   newsContainer: {
     marginRight: 10,
-
     marginBottom: 20,
   },
   imageContainer: {
