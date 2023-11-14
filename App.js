@@ -9,49 +9,41 @@ import {
 } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { StatusBar } from "expo-status-bar";
-import axios from 'axios';
+import axios from "axios";
 
 const App = () => {
   const [actualite, setActualite] = useState([]);
 
-  useEffect(() => {
+const options = {
+  method: 'GET',
+  url: 'https://newsi-api.p.rapidapi.com/api/category',
+  params: {
+    category: 'world',
+    language: 'en',
+    country: 'us',
+    sort: 'top',
+    page: '1',
+    limit: '20'
+  },
+  headers: {
+    'X-RapidAPI-Key': '975d89bfc5msha6afce769395d0cp16aad1jsn2c4d822f8378',
+    'X-RapidAPI-Host': 'newsi-api.p.rapidapi.com'
+  }
+};
+
+const fetchData = async () => {
+  try {
+    const response = await axios.request(options);
+    setActualite(response.data); // Mettre à jour l'état avec les données récupérées
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+  useEffect( () => {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
-    const options = {
-      method: 'POST',
-      url: 'https://newsnow.p.rapidapi.com/newsv2',
-      headers: {
-        'content-type': 'application/json',
-        'X-RapidAPI-Key': '975d89bfc5msha6afce769395d0cp16aad1jsn2c4d822f8378',
-        'X-RapidAPI-Host': 'newsnow.p.rapidapi.com'
-      },
-      data: {
-        query: 'AI',
-        page: 1,
-        time_bounded: true,
-        from_date: '01/02/2021',
-        to_date: '05/06/2021',
-        location: '',
-        category: '',
-        source: ''
-      }
-    };
-
-    try {
-      const response = await axios.request(options);
-      setNewsData(response.data);
-      console.log(response.data);
-
-    } catch (error) {
-      if (error.response.status === 429) {
-        console.log('Trop de requêtes. Atttendre que l\'api soit à nouveau accessible en free');
-      } else {
-        console.error(error);
-      }    
-    }
-  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" backgroundColor="grey" />
@@ -67,36 +59,29 @@ const App = () => {
         <FlashList
           data={actualite}
           estimatedItemSize={250}
-          renderItem={({ item }) => (
-            <View>
-              <Text>Title: {item.title}</Text>
-              <Text>URL: {item.url}</Text>
-              <Text>Published At: {item.PublishedAt}</Text>
-              <Text>Source: {item.source}</Text>
-            </View>
-          )}
 
-          // renderItem={({ item }) => {
-          //   return (
-          //     <ScrollView>
-          //       <View style={styles.newsContainer}>
-          //         <ImageBackground
-          //           source={{ uri: item.image }}
-          //           style={styles.imageContainer}
-          //           imageStyle={styles.image}
-          //         >
-          //           <View style={styles.imageTextContainer}>
-          //             <View style={styles.titleView}>
-          //               <Text style={styles.titleText}>{item.title}</Text>
-          //             </View>
-          //             <Text style={styles.imageText}>{item.date}</Text>
-          //             <Text style={styles.imageText}>{item.description}</Text>
-          //           </View>
-          //         </ImageBackground>
-          //       </View>
-          //     </ScrollView>
-          //   );
-          // }}
+           renderItem={({ item }) => {
+             return (
+              <ScrollView>
+              <View style={styles.newsContainer}>
+                <ImageBackground
+                source={item.image ? { uri: item.image } : {uri: "https://previews.123rf.com/images/alhovik/alhovik1709/alhovik170900030/86470279-nouvelles-nouvelles-world-global-tv-news-design-de-banni%C3%A8re.jpg"}}                  
+                  style={styles.imageContainer}
+                  imageStyle={styles.image}
+                >
+                  <View style={styles.imageTextContainer}>
+                    <View style={styles.titleView}>
+                      <Text style={styles.titleText}>{item.sourceName}</Text>
+                    </View>
+                    <Text style={styles.imageText}>{item.publishedAt}</Text>
+                    <Text style={styles.imageText}>{item.title}</Text>
+                  </View>
+                </ImageBackground>
+              </View>
+            </ScrollView>
+            
+             );
+           }}
         />
       </View>
     </SafeAreaView>
