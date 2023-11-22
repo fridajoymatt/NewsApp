@@ -55,8 +55,12 @@ const fetchData = async () => {
       <StatusBar style="dark" backgroundColor="grey" />
 
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>ACTUALITE</Text>
+      <View style={styles.logoContainer}>
+        <Image source={require('./../assets/logo.png')} style={styles.logo} />
       </View>
+      </View>
+
+
 
       <View style={{ flex: 1 }}>
         <Text style={{ textAlign: "center", marginBottom: 10 }}>
@@ -100,11 +104,7 @@ const fetchData = async () => {
 };
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 50,
-    color: "red",
-    textAlign: "center",
-  },
+
   container: {
     flex: 1,
   },
@@ -158,11 +158,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
   },
-  logo: {
-    width: 100, 
-    height: 100,
-    resizeMode: 'contain', 
+  logoContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    
   },
+  logo: {
+    width: 100,
+    height: 50,
+    resizeMode: 'center',
+  },
+  
   
 });
 
