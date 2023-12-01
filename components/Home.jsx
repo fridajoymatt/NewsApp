@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { StatusBar } from "expo-status-bar";
+import { A } from '@expo/html-elements';
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 

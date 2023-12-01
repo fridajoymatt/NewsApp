@@ -114,8 +114,7 @@ const NewsDetails = () => {
               borderRadius: 10,
               padding: 2,
             }}
-
-            onPress = { share }
+            onPress={share}
           >
             <AntDesign name="sharealt" size={24} color="#fff" />
             <Text style={{ color: "#fff" }}> Partager</Text>
