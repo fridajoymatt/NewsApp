@@ -31,6 +31,10 @@ expo start or npx expo start
 
 ## Screenshots
 
-|                               Screenshot 1                                | Screenshot 2 | 
-| :-----------------------------------------------------------------------: | :----------: |
-| ![Alt text](<screenshots/IM 0001.jpg>) | ![Alt text](<screenshots/IM 0002.png>) |
+| Image  |
+|---------|
+|  ![Alt text](<screenshots/IM 0001.jpg>) |
+
+| Image  |
+|---------|
+|  ![Alt text](<screenshots/IM 0002.png>)  |
